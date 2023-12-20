@@ -48,12 +48,20 @@ const UserSchema = new mongoose.Schema(
       required: [true, "Please provide date of birth"],
       trim: true,
     },
+    isLoggedIn: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
 
 // Setup bcryptjs for password hashing
-UserSchema.pre("save", async function () {
+UserSchema.pre("save", async function (next) {
+  // Check if the password field is modified
+  if (!this.isModified("password")) {
+    return next();
+  }
   const salt = await bcrypt.genSalt(10);
   return (this.password = await bcrypt.hash(this.password, salt));
 });
