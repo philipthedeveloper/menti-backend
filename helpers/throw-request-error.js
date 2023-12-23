@@ -1,6 +1,7 @@
 import {
   createBadRequestError,
   createConflictError,
+  createForbiddenError,
   createMethodNotAllowedError,
   createNotFoundError,
   createUnauthorizedError,
@@ -31,6 +32,10 @@ export const throwUnauthorizedError = (message) => {
 
 export const throwUnprocessableEntityError = (message) => {
   throw createUnprocessableEntityError(message);
+};
+
+export const throwForbiddenError = (message) => {
+  throw createForbiddenError(message);
 };
 
 export const throwServerError = (message) => {

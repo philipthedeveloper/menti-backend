@@ -5,3 +5,4 @@ export * from "./MethodNotAllowed.js";
 export * from "./NotFound.js";
 export * from "./Unauthorized.js";
 export * from "./UnprocessableEntity.js";
+export * from "./Forbidden.js";

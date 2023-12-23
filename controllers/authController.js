@@ -3,6 +3,8 @@ import {
   checkEmptyRequestBody,
   sendSuccessResponse,
   throwBadRequestError,
+  throwForbiddenError,
+  throwNotFoundError,
   throwUnauthorizedError,
 } from "../helpers/index.js";
 import { StatusCodes } from "http-status-codes";
@@ -90,4 +92,21 @@ export const getUser = async (req, res) => {
     });
   }
   throwUnauthorizedError("User not authenticated");
+};
+
+export const deleteUser = async (req, res) => {
+  if (
+    req.currentUser &&
+    req.currentUser.isLoggedIn &&
+    req.currentUser.accountType === "admin"
+  ) {
+    const isBodyEmpty = checkEmptyRequestBody(req.body);
+    if (isBodyEmpty) throwBadRequestError("No data provided");
+    const { userId } = req.body;
+    if (!userId) throwBadRequestError("User id not provided");
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) throwNotFoundError(`User with id: ${userId} not found`);
+    return sendSuccessResponse(res, { message: "User account removed.", user });
+  }
+  throwForbiddenError("Forbidden");
 };
